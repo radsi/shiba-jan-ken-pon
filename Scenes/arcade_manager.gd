@@ -293,6 +293,7 @@ func _animate_hand() -> void:
 	tween.tween_callback(func():
 		$Inputs.get_child(invalid_player_move).visible = false
 		$Particles.get_child(invalid_player_move).emitting = true
+		$Inputs/AudioStreamPlayer2D.play()
 	)
 	tween.tween_property(hand, "position", hand_start_pos, 0.3).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 	tween.tween_callback(func():

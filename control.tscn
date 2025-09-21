@@ -41,13 +41,13 @@ theme_override_constants/separation = 100
 layout_mode = 2
 theme_override_fonts/font = ExtResource("1_0fbet")
 theme_override_font_sizes/font_size = 32
-text = "1 Player"
+text = "Play"
 
-[node name="Button2" type="Button" parent="ColorRect/VBoxContainer"]
+[node name="Button3" type="Button" parent="ColorRect/VBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("1_0fbet")
 theme_override_font_sizes/font_size = 32
-text = "2 Players"
+text = "Credits"
 
 [node name="ScoreLabels" type="CanvasGroup" parent="."]
 z_index = 2
@@ -111,4 +111,4 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [connection signal="pressed" from="ColorRect/VBoxContainer/Button" to="." method="_on_button_pressed"]
-[connection signal="pressed" from="ColorRect/VBoxContainer/Button2" to="." method="_on_button_2_pressed"]
+[connection signal="pressed" from="ColorRect/VBoxContainer/Button3" to="." method="_on_button_3_pressed"]
