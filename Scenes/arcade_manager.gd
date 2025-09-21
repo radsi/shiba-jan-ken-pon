@@ -1,4 +1,4 @@
-extends CanvasLayer
+extends Control
 
 @onready var labels_group = $GameLabels
 @onready var hands_group = $Hands
@@ -6,7 +6,7 @@ extends CanvasLayer
 @onready var head_sprite = $Heads/Head
 
 @export var colors: Array = [Color.YELLOW, Color.ORANGE, Color.RED, Color.PURPLE, Color.BLUE]
-@export var display_time: float = 3
+@export var display_time: float = 4
 @export var gameinfo_display_time: float = 1.0
 @export var speedup_step: float = 0.05
 @onready var color_rect = $ColorRect
@@ -44,6 +44,8 @@ var shaking := false
 # SETUP
 # ------------------------------
 func _ready():
+	var tween = create_tween()
+	tween.tween_property($ColorRect2, "color:a", 0.0, 1)
 	$Smokes/SmokePlayer.seek(0.0, true)
 	_init_labels()
 	_save_original_hand()
@@ -165,7 +167,6 @@ func _show_result():
 	else: stop_head_shake()
 
 func _update_cpu_hand():
-	_animate_key()
 	for lbl in clones: lbl.visible = false
 	var second_hand := hands_group.get_child(1) as Sprite2D
 	if not second_hand: return
@@ -203,6 +204,7 @@ func _reset_loop():
 	time_accum = 0.0
 	intro_ended = false
 	sequence_index = 0
+	_animate_key()
 	invalid_player_move = player_move
 	player_move = -1
 	result_shown = false
@@ -250,8 +252,10 @@ func _game_over():
 			f.store_32(game_round)
 			f.close()
 
-		await get_tree().create_timer(3.0).timeout
-		get_tree().change_scene_to_file("res://control.tscn")
+		var tween = create_tween()
+		tween.tween_property($ColorRect2, "color:a", 1, 3)
+		tween.tween_callback(Callable(self, "_change_scene_menu"))
+
 		return
 	for lbl in $RoundLabels.get_children():
 		lbl.text = "Round %s" % game_round
@@ -267,6 +271,9 @@ func _game_over():
 # ------------------------------
 # ANIMACIONES CABEZA
 # ------------------------------
+
+func _change_scene_menu():
+	get_tree().change_scene_to_file("res://control.tscn")
 
 func _animate_key() -> void:
 	if invalid_player_move == -1 or not is_boss_round:

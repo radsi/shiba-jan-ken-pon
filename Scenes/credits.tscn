@@ -37,16 +37,26 @@ metadata/_edit_use_anchors_ = true
 [node name="Label" type="Label" parent="ColorRect"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.2361111
-anchor_top = 0.30787036
-anchor_right = 0.7638889
-anchor_bottom = 0.3433642
+anchor_left = 0.036458332
+anchor_top = 0.2839506
+anchor_right = 0.9670139
+anchor_bottom = 0.4845679
 offset_top = 1.5258789e-05
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_fonts/font = ExtResource("1_r18jl")
 theme_override_font_sizes/font_size = 16
-text = "Boss SFX: Deathbygeko on freesound.org"
+text = "Boss SFX: Deathbygeko on freesound.org
+Key sprites: dreammixgames on Itch.io
+Fox head: heilsena
+Oni head: fikriubai
+
+
+
+
+Any other asset not mentioned here has a Creative Commons 0 license"
+horizontal_alignment = 1
+vertical_alignment = 1
 metadata/_edit_use_anchors_ = true
 
 [node name="Buttonback" type="Button" parent="ColorRect"]

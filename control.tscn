@@ -13,6 +13,16 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_62e2m")
 
+[node name="ColorRect2" type="ColorRect" parent="."]
+z_index = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0)
+
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
@@ -41,7 +51,7 @@ theme_override_constants/separation = 100
 layout_mode = 2
 theme_override_fonts/font = ExtResource("1_0fbet")
 theme_override_font_sizes/font_size = 32
-text = "Play"
+text = "Insert coin"
 
 [node name="Button3" type="Button" parent="ColorRect/VBoxContainer"]
 layout_mode = 2
