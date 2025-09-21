@@ -97,6 +97,8 @@ func _check_player_input():
 	if Input.is_action_just_pressed("ui_left"): player_move = 0
 	elif Input.is_action_just_pressed("ui_up"): player_move = 1
 	elif Input.is_action_just_pressed("ui_right"): player_move = 2
+	
+	if player_move == invalid_player_move: player_move = -1
 
 func _handle_intro():
 	if not intro_ended and time_accum >= (display_time):
@@ -204,7 +206,7 @@ func _reset_loop():
 		second_hand.flip_h = original_hand_flip_h
 		if is_boss_round and abs(PlayerPoints - CPUPoints) < point_diff_towin:
 			_animate_hand()
-		is_boss_round = game_round % 2 == 0
+		is_boss_round = game_round % 5 == 0
 
 func _game_over():
 	var winner_text = ""
@@ -213,7 +215,9 @@ func _game_over():
 		_animate_head()
 		game_round += 1
 	else:
-		game_over = true
+		#game_over = true
+		_animate_head()
+		game_round += 1
 		winner_text = "CPU Wins!"
 		hands_group.get_child(0).frame = original_hand_frame
 		hands_group.get_child(0).flip_h = true
@@ -242,6 +246,7 @@ func _game_over():
 # ------------------------------
 
 func _animate_hand() -> void:
+	if invalid_player_move == -1: return
 	var hand = hands_group.get_child(0) as Node2D
 	var key_top = $Inputs.get_child(invalid_player_move).global_position - Vector2(0, 40)
 	var hand_start_pos = hand.position
@@ -252,6 +257,7 @@ func _animate_hand() -> void:
 	tween.tween_property(hand, "position", key_top, 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	tween.tween_callback(func():
 		$Inputs.get_child(invalid_player_move).visible = false
+		$Particles.get_child(invalid_player_move).emitting = true
 	)
 	tween.tween_property(hand, "position", hand_start_pos, 0.3).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 	tween.tween_callback(func():

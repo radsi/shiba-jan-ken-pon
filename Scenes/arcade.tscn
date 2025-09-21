@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://s7cxpq17py1p"]
+[gd_scene load_steps=14 format=3 uid="uid://s7cxpq17py1p"]
 
 [ext_resource type="Texture2D" uid="uid://bwhj2gn0lyeha" path="res://Enemies/shiba.png" id="1_nuqfx"]
 [ext_resource type="Script" uid="uid://7ps3ls8xbehj" path="res://Scenes/arcade_manager.gd" id="1_nw1ri"]
@@ -9,6 +9,10 @@
 [ext_resource type="Script" uid="uid://c3knbmcenfh2a" path="res://Scenes/combo_labels.gd" id="5_0ov7s"]
 [ext_resource type="Script" uid="uid://dqb3fsrcjljrq" path="res://Scenes/status_labels.gd" id="5_nw1ri"]
 [ext_resource type="Texture2D" uid="uid://dht1btvf6yflx" path="res://smoke_spritesheet.png" id="9_2uunk"]
+
+[sub_resource type="Curve" id="Curve_2uunk"]
+_data = [Vector2(0.073929965, 0.98081654), 0.0, 0.0, 0, 0, Vector2(0.307393, 0), 0.0, 0.0, 0, 0]
+point_count = 2
 
 [sub_resource type="Animation" id="Animation_xr7hh"]
 length = 0.001
@@ -72,6 +76,56 @@ size_flags_horizontal = 4
 color = Color(0.36290386, 0.40453744, 0.42925543, 1)
 metadata/_edit_use_anchors_ = true
 
+[node name="Particles" type="CanvasGroup" parent="."]
+position = Vector2(567, 505)
+
+[node name="CPUParticles2D3" type="CPUParticles2D" parent="Particles"]
+position = Vector2(-91, 0)
+scale = Vector2(4.9999995, 5)
+emitting = false
+amount = 30
+one_shot = true
+explosiveness = 1.0
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 50.0
+initial_velocity_max = 80.0
+scale_amount_min = 15.0
+scale_amount_max = 20.0
+scale_amount_curve = SubResource("Curve_2uunk")
+color = Color(0.32420272, 0.32420275, 0.32420272, 1)
+
+[node name="CPUParticles2D2" type="CPUParticles2D" parent="Particles"]
+scale = Vector2(4.9999995, 5)
+emitting = false
+amount = 30
+one_shot = true
+explosiveness = 1.0
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 50.0
+initial_velocity_max = 80.0
+scale_amount_min = 15.0
+scale_amount_max = 20.0
+scale_amount_curve = SubResource("Curve_2uunk")
+color = Color(0.32420272, 0.32420275, 0.32420272, 1)
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="Particles"]
+position = Vector2(99, 0)
+scale = Vector2(4.9999995, 5)
+emitting = false
+amount = 30
+one_shot = true
+explosiveness = 1.0
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 50.0
+initial_velocity_max = 80.0
+scale_amount_min = 15.0
+scale_amount_max = 20.0
+scale_amount_curve = SubResource("Curve_2uunk")
+color = Color(0.32420272, 0.32420275, 0.32420272, 1)
+
 [node name="Inputs" type="CanvasGroup" parent="."]
 position = Vector2(567, 505)
 
@@ -84,29 +138,12 @@ hframes = 8
 vframes = 14
 frame = 2
 
-[node name="Rock" type="Sprite2D" parent="Inputs/key 1"]
-texture_filter = 1
-position = Vector2(-2, 13.399994)
-scale = Vector2(0.119571574, 0.11540929)
-texture = ExtResource("2_8inwh")
-hframes = 2
-vframes = 2
-
 [node name="key 2" type="Sprite2D" parent="Inputs"]
 texture_filter = 1
 scale = Vector2(4.9999995, 5)
 texture = ExtResource("2_nw1ri")
 hframes = 9
 vframes = 14
-
-[node name="Paper" type="Sprite2D" parent="Inputs/key 2"]
-texture_filter = 1
-position = Vector2(3, 21.399994)
-scale = Vector2(0.119571574, 0.11540929)
-texture = ExtResource("2_8inwh")
-hframes = 2
-vframes = 2
-frame = 3
 
 [node name="key 3" type="Sprite2D" parent="Inputs"]
 texture_filter = 1
@@ -117,10 +154,27 @@ hframes = 8
 vframes = 14
 frame = 3
 
-[node name="Scissors" type="Sprite2D" parent="Inputs/key 3"]
+[node name="Rock" type="Sprite2D" parent="Inputs"]
 texture_filter = 1
-position = Vector2(-0.19999695, 20.59999)
-scale = Vector2(0.119571574, 0.11540929)
+position = Vector2(-101, 67)
+scale = Vector2(0.59785783, 0.57704645)
+texture = ExtResource("2_8inwh")
+hframes = 2
+vframes = 2
+
+[node name="Paper" type="Sprite2D" parent="Inputs"]
+texture_filter = 1
+position = Vector2(15, 107)
+scale = Vector2(0.59785783, 0.5770464)
+texture = ExtResource("2_8inwh")
+hframes = 2
+vframes = 2
+frame = 3
+
+[node name="Scissors" type="Sprite2D" parent="Inputs"]
+texture_filter = 1
+position = Vector2(98, 102.99994)
+scale = Vector2(0.59785783, 0.57704645)
 texture = ExtResource("2_8inwh")
 hframes = 2
 vframes = 2
