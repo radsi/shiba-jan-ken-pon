@@ -2,7 +2,7 @@
 
 [ext_resource type="FontFile" uid="uid://dpr4kf3pm2u4p" path="res://PressStart2P-vaV7.ttf" id="1_0fbet"]
 [ext_resource type="Script" uid="uid://cymsg037sjw5o" path="res://menu.gd" id="1_62e2m"]
-[ext_resource type="Script" uid="uid://dqb3fsrcjljrq" path="res://Scenes/status_labels.gd" id="3_qtu10"]
+[ext_resource type="Script" uid="uid://bfehsje6auurs" path="res://score_labels.gd" id="3_qtu10"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -55,10 +55,10 @@ position = Vector2(-170, 32)
 rotation = -0.18264902
 
 [node name="GameText2" type="Label" parent="ScoreLabels"]
-offset_left = -17.0106
-offset_top = 15.017128
-offset_right = 763.9894
-offset_bottom = 248.01712
+offset_left = -4.8781853
+offset_top = 26.410316
+offset_right = 776.1218
+offset_bottom = 259.4103
 theme_override_fonts/font = ExtResource("1_0fbet")
 theme_override_font_sizes/font_size = 28
 text = "High score: 0"
@@ -66,10 +66,10 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="GameText" type="Label" parent="ScoreLabels"]
-offset_left = -17.0106
-offset_top = 15.017128
-offset_right = 763.9894
-offset_bottom = 248.01712
+offset_left = -4.8781853
+offset_top = 26.410316
+offset_right = 776.1218
+offset_bottom = 259.4103
 theme_override_fonts/font = ExtResource("1_0fbet")
 theme_override_font_sizes/font_size = 28
 text = "High score: 0"
@@ -78,10 +78,10 @@ vertical_alignment = 1
 script = ExtResource("3_qtu10")
 
 [node name="GameText3" type="Label" parent="ScoreLabels"]
-offset_left = -17.0106
-offset_top = 15.017128
-offset_right = 763.9894
-offset_bottom = 248.01712
+offset_left = -4.8781853
+offset_top = 26.410316
+offset_right = 776.1218
+offset_bottom = 259.4103
 theme_override_fonts/font = ExtResource("1_0fbet")
 theme_override_font_sizes/font_size = 28
 text = "High score: 0"
@@ -89,10 +89,10 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="GameText4" type="Label" parent="ScoreLabels"]
-offset_left = -17.0106
-offset_top = 15.017128
-offset_right = 763.9894
-offset_bottom = 248.01712
+offset_left = -4.8781853
+offset_top = 26.410316
+offset_right = 776.1218
+offset_bottom = 259.4103
 theme_override_fonts/font = ExtResource("1_0fbet")
 theme_override_font_sizes/font_size = 28
 text = "High score: 0"
@@ -100,10 +100,10 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="GameText5" type="Label" parent="ScoreLabels"]
-offset_left = -17.0106
-offset_top = 15.017128
-offset_right = 763.9894
-offset_bottom = 248.01712
+offset_left = -4.8781853
+offset_top = 26.410316
+offset_right = 776.1218
+offset_bottom = 259.4103
 theme_override_fonts/font = ExtResource("1_0fbet")
 theme_override_font_sizes/font_size = 28
 text = "High score: 0"

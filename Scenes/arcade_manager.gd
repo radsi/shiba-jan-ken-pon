@@ -9,6 +9,7 @@ extends Node2D
 @export var display_time: float = 3
 @export var gameinfo_display_time: float = 1.0
 @export var speedup_step: float = 0.05
+@onready var color_rect = $ColorRect
 
 var clones: Array = []
 var time_accum: float = 0.0
@@ -26,7 +27,7 @@ var cpu_move: int = -1
 var original_hand_frame: int
 var original_hand_flip_h: bool
 var game_over = false
-var game_round = 1
+var game_round: int = 1
 var is_boss_round: bool = false
 var invalid_player_move: int = -1
 var invalid_cpu_move: int = -1
@@ -43,6 +44,7 @@ var shaking := false
 # SETUP
 # ------------------------------
 func _ready():
+	$Smokes/SmokePlayer.seek(0.0, true)
 	_init_labels()
 	_save_original_hand()
 	_load_enemy_textures("res://Enemies/")
@@ -87,6 +89,13 @@ func _process(delta):
 	_handle_intro()
 	_handle_sequence(delta)
 	_handle_result(delta)
+	_update_gradient_color()
+
+func _update_gradient_color():
+	var t = clamp(gameinfo_display_time / 1.0, 0, 1) 
+	var blue = Color(100/255.0, 127/255.0, 188/255.0)
+	var red = Color(180/255.0, 40/255.0, 40/255.0)
+	color_rect.color = blue.lerp(red, 1.0 - t)
 
 func _update_label_wobble():
 	for i in clones.size():
@@ -149,12 +158,14 @@ func _show_result():
 	result_shown = true
 	result_timer = 0.0
 	if gameinfo_display_time < 0.75: $Smokes/SmokePlayer.play("smoke_anim") 
-	else: $Smokes/SmokePlayer.stop()
+	else: 
+		$Smokes/SmokePlayer.seek(0.0, true)
+		$Smokes/SmokePlayer.stop()
 	if gameinfo_display_time < 0.5: start_head_shake() 
 	else: stop_head_shake()
 
 func _update_cpu_hand():
-	for btn in $Inputs.get_children(): btn.visible = true
+	_animate_key()
 	for lbl in clones: lbl.visible = false
 	var second_hand := hands_group.get_child(1) as Sprite2D
 	if not second_hand: return
@@ -215,9 +226,7 @@ func _game_over():
 		_animate_head()
 		game_round += 1
 	else:
-		#game_over = true
-		_animate_head()
-		game_round += 1
+		game_over = true
 		winner_text = "CPU Wins!"
 		hands_group.get_child(0).frame = original_hand_frame
 		hands_group.get_child(0).flip_h = true
@@ -227,6 +236,20 @@ func _game_over():
 		lbl.visible = true
 		lbl.text = winner_text
 	if game_over:
+		var value: int = -1
+		if FileAccess.file_exists("user://score.dat"):
+			var f = FileAccess.open("user://score.dat", FileAccess.READ)
+			var flag = f.get_8()
+			if flag == 1:
+				value = f.get_32()
+			f.close()
+
+		if value == -1 or game_round > value:
+			var f = FileAccess.open("user://score.dat", FileAccess.WRITE)
+			f.store_8(1)
+			f.store_32(game_round)
+			f.close()
+
 		await get_tree().create_timer(3.0).timeout
 		get_tree().change_scene_to_file("res://control.tscn")
 		return
@@ -244,6 +267,18 @@ func _game_over():
 # ------------------------------
 # ANIMACIONES CABEZA
 # ------------------------------
+
+func _animate_key() -> void:
+	if invalid_player_move == -1 or not is_boss_round:
+		return
+	
+	var key = $Inputs.get_child(invalid_player_move)
+	var start_pos = key.position
+	key.position = start_pos + Vector2(0, 100)
+	key.visible = true
+	
+	var tween = create_tween()
+	tween.tween_property(key, "position", start_pos, 0.3).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 
 func _animate_hand() -> void:
 	if invalid_player_move == -1: return
