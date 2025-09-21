@@ -121,6 +121,17 @@ func _handle_intro():
 
 func _handle_sequence(delta):
 	if intro_ended and sequence_index < sequence.size():
+		if sequence_index == 1 and cpu_move == -1:
+			cpu_move = randi() % 3
+			if game_round == 1:
+				$AudioStreamPlayer2D3.play()
+				$ExclMark.visible = true
+		if sequence_index > 0 and game_round == 1:
+			var first_hand := hands_group.get_child(0) as Sprite2D
+			match cpu_move:
+				0: first_hand.frame = 13; first_hand.flip_h = true
+				1: first_hand.frame = 0; first_hand.flip_h = true
+				2: first_hand.frame = 11; first_hand.flip_h = false
 		for lbl in clones:
 			lbl.visible = true
 			lbl.text = sequence[sequence_index]
@@ -144,7 +155,6 @@ func _handle_result(delta):
 # RESULTADOS
 # ------------------------------
 func _show_result():
-	cpu_move = randi() % 3
 	_update_cpu_hand()
 	var result_text := _determine_winner()
 	for lbl in clones: lbl.text = result_text
@@ -201,11 +211,13 @@ func _determine_winner() -> String:
 # FLUJO DE JUEGO
 # ------------------------------
 func _reset_loop():
+	$ExclMark.visible = false
 	time_accum = 0.0
 	intro_ended = false
 	sequence_index = 0
-	_animate_key()
+	_animate_keys()
 	invalid_player_move = player_move
+	if not is_boss_round: invalid_player_move = -1
 	player_move = -1
 	result_shown = false
 	result_timer = 0.0
@@ -213,19 +225,26 @@ func _reset_loop():
 	for lbl in clones:
 		lbl.visible = true
 		lbl.text = clones[0].text
-	var second_hand = hands_group.get_child(1)
-	if second_hand is Sprite2D:
-		second_hand.frame = original_hand_frame
-		second_hand.flip_h = original_hand_flip_h
-		if is_boss_round and abs(PlayerPoints - CPUPoints) < point_diff_towin:
-			_animate_hand()
-		is_boss_round = game_round % 5 == 0
+
+	for i in range(hands_group.get_child_count()):
+		var hand = hands_group.get_child(i)
+		hand.frame = original_hand_frame
+		if i == 1:
+			hand.flip_h = original_hand_flip_h
+		else:
+			hand.flip_h = not original_hand_flip_h
+		
+	if is_boss_round and abs(PlayerPoints - CPUPoints) < point_diff_towin:
+		_animate_hand()
+
+	is_boss_round = game_round % 3 == 0
 
 func _game_over():
 	var winner_text = ""
 	if PlayerPoints > CPUPoints:
 		winner_text = "Player Wins!"
 		_animate_head()
+		_animate_keys()
 		game_round += 1
 	else:
 		game_over = true
@@ -252,6 +271,7 @@ func _game_over():
 			f.store_32(game_round)
 			f.close()
 
+		$AudioStreamPlayer2D2.play()
 		var tween = create_tween()
 		tween.tween_property($ColorRect2, "color:a", 1, 3)
 		tween.tween_callback(Callable(self, "_change_scene_menu"))
@@ -275,17 +295,18 @@ func _game_over():
 func _change_scene_menu():
 	get_tree().change_scene_to_file("res://control.tscn")
 
-func _animate_key() -> void:
-	if invalid_player_move == -1 or not is_boss_round:
+func _animate_keys() -> void:
+	if not is_boss_round:
 		return
 	
-	var key = $Inputs.get_child(invalid_player_move)
-	var start_pos = key.position
-	key.position = start_pos + Vector2(0, 100)
-	key.visible = true
-	
-	var tween = create_tween()
-	tween.tween_property(key, "position", start_pos, 0.3).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	for key in $Inputs.get_children():
+		if not key.visible:
+			var start_pos = key.position
+			key.position = start_pos + Vector2(0, 100)
+			key.visible = true
+			
+			var tween = create_tween()
+			tween.tween_property(key, "position", start_pos, 0.3).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 
 func _animate_hand() -> void:
 	if invalid_player_move == -1: return
