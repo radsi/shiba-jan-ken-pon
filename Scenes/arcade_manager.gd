@@ -31,6 +31,9 @@ var head_start_pos: Vector2
 var head_start_rot: float
 var enemy_textures: Array = []
 
+var shake_tween: Tween
+var shaking := false
+
 func _ready():
 	for lbl in labels_group.get_children():
 		if lbl is Label:
@@ -61,6 +64,7 @@ func _ready():
 			if f.ends_with(".png"):
 				enemy_textures.append(load(dir + f))
 		da.list_dir_end()
+	_change_head_texture()
 
 func _process(delta):
 	time_accum += delta
@@ -124,7 +128,7 @@ func _process(delta):
 		# Resultado
 		var result_text = "I win"
 		CPUPoints += 1
-		speedup_step = 0.1
+		speedup_step = 0
 		if player_move != -1:
 			if player_move == cpu_move:
 				result_text = "Draw"
@@ -134,13 +138,15 @@ func _process(delta):
 				 (player_move == 1 and cpu_move == 0) or \
 				 (player_move == 2 and cpu_move == 1):
 				result_text = "You win"
-				speedup_step = -0.05
 				player_combo += 1
+				if player_combo >= 2:
+					speedup_step = -0.5
 				PlayerPoints += 1
 				CPUPoints -= 1
 				
 		if result_text == "I win":
 			player_combo = 0
+			speedup_step = 0.1
 			for lbl in $ComboLabels.get_children():
 				lbl.visible = false
 
@@ -158,10 +164,20 @@ func _process(delta):
 				lbl.visible = true
 				lbl.text = "x"+str(player_combo)
 
+		if sequence[1][1] < 0.75:
+			$Smokes/SmokePlayer.play("smoke_anim")
+		else:
+			$Smokes/SmokePlayer.stop()
+			
+		if sequence[1][1] < 0.5:
+			start_head_shake()
+		else:
+			stop_head_shake()
+
 	if result_shown:
 		result_timer += delta
 		if result_timer >= result_display_time:
-			if abs(PlayerPoints - CPUPoints) >= 4:
+			if abs(PlayerPoints - CPUPoints) >= 2:
 				_game_over()
 			else:
 				_reset_loop()
@@ -176,7 +192,8 @@ func _reset_loop():
 	cpu_move = -1
 
 	for i in range(sequence.size()):
-		sequence[i][1] = max(0.1, sequence[i][1] - speedup_step)
+		if sequence[i][1] >= 0.25:
+			sequence[i][1] = max(0.1, sequence[i][1] - speedup_step)
 
 	for i in range(clones.size()):
 		clones[i].visible = true
@@ -189,42 +206,88 @@ func _reset_loop():
 		second_hand.flip_h = original_hand_flip_h
 
 func _game_over():
-	game_over = true
 	var winner_text = ""
 	if PlayerPoints > CPUPoints:
 		winner_text = "Player Wins!"
+		_animate_head()
 		game_round += 1
 	else:
+		game_over = true
 		winner_text = "CPU Wins!"
+		hands_group.get_child(0).frame = original_hand_frame
+		hands_group.get_child(0).flip_h = true
+		hands_group.get_child(1).flip_h = false
+		hands_group.get_child(1).frame = original_hand_frame
 
 	for lbl in clones:
 		lbl.visible = true
 		lbl.text = winner_text
-		
+
+	if game_over:
+		await get_tree().create_timer(3.0).timeout
+		get_tree().change_scene_to_file("res://control.tscn")
+		return
+
 	for lbl in $RoundLabels.get_children():
-		lbl.text = game_round
+		lbl.text = str(game_round)
 
-	_animate_head()
+	var second_hand = hands_group.get_child(1)
+	if second_hand is Sprite2D:
+		second_hand.frame = original_hand_frame
+		second_hand.flip_h = original_hand_flip_h
 
-func _animate_head():
+	PlayerPoints = 0
+	CPUPoints = 0
+
+	for lbl in $PointsLabels.get_children():
+		lbl.text = "0 - 0"
+
+func _animate_head() -> void:
 	var tween = create_tween()
-
 	var screen_bottom = DisplayServer.window_get_size().y + 100
-	tween.tween_property(head_sprite, "position:y", screen_bottom, 0.5)
-	tween.tween_property(head_sprite, "rotation_degrees", 360, 0.5)
+
+	tween.tween_property(head_sprite, "position:y", screen_bottom, 0.5).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 	tween.tween_callback(Callable(self, "_change_head_texture"))
-
-	head_sprite.position = head_start_pos - Vector2(0, 200)
-	head_sprite.rotation_degrees = 0
-
-	tween.tween_property(head_sprite, "position", head_start_pos, 0.5)
-	tween.tween_property(head_sprite, "rotation_degrees", head_start_rot, 0.5)
-
+	tween.tween_callback(func():
+		head_sprite.position = head_start_pos - Vector2(0, 200)
+		head_sprite.rotation_degrees = 0
+	)
+	tween.tween_property(head_sprite, "position", head_start_pos, 0.5).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tween.tween_callback(func():
+		var rot_tween = create_tween()
+		rot_tween.tween_property(head_sprite, "rotation_degrees", head_sprite.rotation_degrees + 360, 0.5)
+	)
 	await tween.finished
-	await get_tree().create_timer(1.0).timeout
-	game_over = false
-	_reset_loop()
 
-func _change_head_texture():
-	if enemy_textures.size() > 0:
-		head_sprite.texture = enemy_textures[randi() % enemy_textures.size()]
+func _change_head_texture() -> void:
+	if enemy_textures.size() > 1:
+		var new_texture = head_sprite.texture
+		while new_texture == head_sprite.texture:
+			new_texture = enemy_textures[randi() % enemy_textures.size()]
+		head_sprite.texture = new_texture
+	elif enemy_textures.size() == 1:
+		head_sprite.texture = enemy_textures[0]
+
+
+func start_head_shake(intensity := 5.0, speed := 0.05) -> void:
+	if shaking:
+		return
+	shaking = true
+	_shake_head(intensity, speed)
+
+
+func _shake_head(intensity: float, speed: float) -> void:
+	if not shaking:
+		head_sprite.position = head_start_pos
+		return
+	
+	var offset = Vector2(randf_range(-intensity, intensity), randf_range(-intensity, intensity))
+	var tween = create_tween()
+	tween.tween_property(head_sprite, "position", head_start_pos + offset, speed).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_callback(func() -> void:
+		_shake_head(intensity, speed)
+	)
+
+func stop_head_shake() -> void:
+	shaking = false
+	head_sprite.position = head_start_pos

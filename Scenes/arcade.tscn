@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://s7cxpq17py1p"]
+[gd_scene load_steps=13 format=3 uid="uid://s7cxpq17py1p"]
 
 [ext_resource type="Texture2D" uid="uid://bwhj2gn0lyeha" path="res://Enemies/shiba.png" id="1_nuqfx"]
 [ext_resource type="Script" uid="uid://7ps3ls8xbehj" path="res://Scenes/arcade_manager.gd" id="1_nw1ri"]
@@ -8,6 +8,57 @@
 [ext_resource type="FontFile" uid="uid://dpr4kf3pm2u4p" path="res://PressStart2P-vaV7.ttf" id="4_0ov7s"]
 [ext_resource type="Script" uid="uid://c3knbmcenfh2a" path="res://Scenes/combo_labels.gd" id="5_0ov7s"]
 [ext_resource type="Script" uid="uid://dqb3fsrcjljrq" path="res://Scenes/status_labels.gd" id="5_nw1ri"]
+[ext_resource type="Texture2D" uid="uid://dht1btvf6yflx" path="res://smoke_spritesheet.png" id="9_2uunk"]
+
+[sub_resource type="Animation" id="Animation_2uunk"]
+resource_name = "smoke_anim"
+length = 0.5
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SmokeSpritesheet:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(-0.00021080673, 0.06645586, 0.16645586, 0.26666668, 0.36666667, 0.46645588),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [6, 7, 8, 9, 10, 11]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("SmokeSpritesheet2:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.06666667, 0.16666667, 0.26687747, 0.3668775, 0.4666667),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [6, 7, 8, 9, 10, 11]
+}
+
+[sub_resource type="Animation" id="Animation_xr7hh"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SmokeSpritesheet:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [6]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_01rry"]
+_data = {
+&"RESET": SubResource("Animation_xr7hh"),
+&"smoke_anim": SubResource("Animation_2uunk")
+}
 
 [node name="Arcade" type="Node2D"]
 script = ExtResource("1_nw1ri")
@@ -328,3 +379,30 @@ texture_filter = 1
 position = Vector2(583, 164)
 scale = Vector2(0.15, 0.15)
 texture = ExtResource("1_nuqfx")
+
+[node name="Smokes" type="CanvasGroup" parent="."]
+
+[node name="SmokeSpritesheet" type="Sprite2D" parent="Smokes"]
+texture_filter = 1
+position = Vector2(50, 608)
+rotation = -2.3867426
+scale = Vector2(5, 6.190841)
+texture = ExtResource("9_2uunk")
+hframes = 4
+vframes = 3
+frame = 6
+
+[node name="SmokeSpritesheet2" type="Sprite2D" parent="Smokes"]
+texture_filter = 1
+position = Vector2(1111.0001, 612.9999)
+rotation = 2.3876104
+scale = Vector2(5, 6.190841)
+texture = ExtResource("9_2uunk")
+hframes = 4
+vframes = 3
+frame = 6
+
+[node name="SmokePlayer" type="AnimationPlayer" parent="Smokes"]
+libraries = {
+&"": SubResource("AnimationLibrary_01rry")
+}
