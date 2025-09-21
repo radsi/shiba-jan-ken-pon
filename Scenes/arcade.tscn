@@ -73,64 +73,64 @@ color = Color(0.36290386, 0.40453744, 0.42925543, 1)
 metadata/_edit_use_anchors_ = true
 
 [node name="Inputs" type="CanvasGroup" parent="."]
-position = Vector2(652, 66)
-
-[node name="Rock" type="Sprite2D" parent="Inputs"]
-texture_filter = 1
-position = Vector2(-167, 542)
-scale = Vector2(0.59785783, 0.5770465)
-texture = ExtResource("2_8inwh")
-hframes = 2
-vframes = 2
+position = Vector2(567, 505)
 
 [node name="key 1" type="Sprite2D" parent="Inputs"]
 texture_filter = 1
-position = Vector2(-157, 475)
+position = Vector2(-91, 0)
 scale = Vector2(4.9999995, 5)
 texture = ExtResource("2_nw1ri")
 hframes = 8
 vframes = 14
 frame = 2
 
+[node name="Rock" type="Sprite2D" parent="Inputs/key 1"]
+texture_filter = 1
+position = Vector2(-2, 13.399994)
+scale = Vector2(0.119571574, 0.11540929)
+texture = ExtResource("2_8inwh")
+hframes = 2
+vframes = 2
+
 [node name="key 2" type="Sprite2D" parent="Inputs"]
 texture_filter = 1
-position = Vector2(-67, 475)
 scale = Vector2(4.9999995, 5)
 texture = ExtResource("2_nw1ri")
 hframes = 9
 vframes = 14
 
+[node name="Paper" type="Sprite2D" parent="Inputs/key 2"]
+texture_filter = 1
+position = Vector2(3, 21.399994)
+scale = Vector2(0.119571574, 0.11540929)
+texture = ExtResource("2_8inwh")
+hframes = 2
+vframes = 2
+frame = 3
+
 [node name="key 3" type="Sprite2D" parent="Inputs"]
 texture_filter = 1
-position = Vector2(33, 475)
+position = Vector2(99, 0)
 scale = Vector2(4.9999995, 5)
 texture = ExtResource("2_nw1ri")
 hframes = 8
 vframes = 14
 frame = 3
 
-[node name="Scissors" type="Sprite2D" parent="Inputs"]
+[node name="Scissors" type="Sprite2D" parent="Inputs/key 3"]
 texture_filter = 1
-position = Vector2(32, 578)
-scale = Vector2(0.59785783, 0.5770465)
+position = Vector2(-0.19999695, 20.59999)
+scale = Vector2(0.119571574, 0.11540929)
 texture = ExtResource("2_8inwh")
 hframes = 2
 vframes = 2
 frame = 2
 
-[node name="Paper" type="Sprite2D" parent="Inputs"]
-texture_filter = 1
-position = Vector2(-52, 582)
-scale = Vector2(0.59785783, 0.5770465)
-texture = ExtResource("2_8inwh")
-hframes = 2
-vframes = 2
-frame = 3
-
 [node name="ComboLabels" type="CanvasGroup" parent="."]
 position = Vector2(652, 66)
 
 [node name="GameText2" type="Label" parent="ComboLabels"]
+visible = false
 offset_left = -7.0
 offset_top = 12.0
 offset_right = 774.0
@@ -142,6 +142,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="GameText" type="Label" parent="ComboLabels"]
+visible = false
 offset_left = -7.0
 offset_top = 12.0
 offset_right = 774.0
@@ -154,6 +155,7 @@ vertical_alignment = 1
 script = ExtResource("5_0ov7s")
 
 [node name="GameText3" type="Label" parent="ComboLabels"]
+visible = false
 offset_left = -7.0
 offset_top = 12.0
 offset_right = 774.0
@@ -165,6 +167,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="GameText4" type="Label" parent="ComboLabels"]
+visible = false
 offset_left = -7.0
 offset_top = 12.0
 offset_right = 774.0
@@ -176,6 +179,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="GameText5" type="Label" parent="ComboLabels"]
+visible = false
 offset_left = -7.0
 offset_top = 12.0
 offset_right = 774.0

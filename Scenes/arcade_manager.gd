@@ -27,8 +27,13 @@ var original_hand_frame: int
 var original_hand_flip_h: bool
 var game_over = false
 var game_round = 1
+var is_boss_round: bool = false
+var invalid_player_move: int = -1
+var invalid_cpu_move: int = -1
+var point_diff_towin: int = 2
 
 var head_start_pos: Vector2
+var hand_start_pos: Vector2
 var head_start_rot: float = 0
 var enemy_textures: Array = []
 
@@ -94,7 +99,7 @@ func _check_player_input():
 	elif Input.is_action_just_pressed("ui_right"): player_move = 2
 
 func _handle_intro():
-	if not intro_ended and time_accum >= (display_time - gameinfo_display_time + 1):
+	if not intro_ended and time_accum >= (display_time):
 		intro_ended = true
 		for lbl in clones: lbl.visible = false
 		for hand in hands_group.get_children():
@@ -116,7 +121,7 @@ func _handle_result(delta):
 	if result_shown:
 		result_timer += delta
 		if result_timer >= gameinfo_display_time:
-			if abs(PlayerPoints - CPUPoints) >= 9:
+			if abs(PlayerPoints - CPUPoints) >= point_diff_towin:
 				_game_over()
 			else:
 				gameinfo_display_time = max(0.25, gameinfo_display_time - speedup_step)
@@ -147,6 +152,7 @@ func _show_result():
 	else: stop_head_shake()
 
 func _update_cpu_hand():
+	for btn in $Inputs.get_children(): btn.visible = true
 	for lbl in clones: lbl.visible = false
 	var second_hand := hands_group.get_child(1) as Sprite2D
 	if not second_hand: return
@@ -184,6 +190,7 @@ func _reset_loop():
 	time_accum = 0.0
 	intro_ended = false
 	sequence_index = 0
+	invalid_player_move = player_move
 	player_move = -1
 	result_shown = false
 	result_timer = 0.0
@@ -195,6 +202,9 @@ func _reset_loop():
 	if second_hand is Sprite2D:
 		second_hand.frame = original_hand_frame
 		second_hand.flip_h = original_hand_flip_h
+		if is_boss_round and abs(PlayerPoints - CPUPoints) < point_diff_towin:
+			_animate_hand()
+		is_boss_round = game_round % 2 == 0
 
 func _game_over():
 	var winner_text = ""
@@ -230,10 +240,29 @@ func _game_over():
 # ------------------------------
 # ANIMACIONES CABEZA
 # ------------------------------
+
+func _animate_hand() -> void:
+	var hand = hands_group.get_child(0) as Node2D
+	var key_top = $Inputs.get_child(invalid_player_move).global_position - Vector2(0, 40)
+	var hand_start_pos = hand.position
+
+	hand.frame = 13
+
+	var tween = create_tween()
+	tween.tween_property(hand, "position", key_top, 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tween.tween_callback(func():
+		$Inputs.get_child(invalid_player_move).visible = false
+	)
+	tween.tween_property(hand, "position", hand_start_pos, 0.3).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	tween.tween_callback(func():
+		hand.frame = 12
+	)
+
 func _animate_head() -> void:
 	var tween = create_tween()
 	var screen_bottom = DisplayServer.window_get_size().y + 100
 	head_start_pos = head_root.position
+
 	tween.tween_property(head_root, "position:y", screen_bottom, 0.5).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 	tween.tween_callback(Callable(self, "_change_head_texture"))
 	tween.tween_callback(func():
@@ -244,6 +273,12 @@ func _animate_head() -> void:
 	tween.tween_callback(func():
 		var rot_tween = create_tween()
 		rot_tween.tween_property(head_root, "rotation_degrees", head_root.rotation_degrees + 360, 0.5)
+		
+		if is_boss_round == false: return
+		var bounce_tween = create_tween()
+		for i in range(6):
+			bounce_tween.tween_property(head_root, "position:y", head_start_pos.y - 50, 0.15).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+			bounce_tween.tween_property(head_root, "position:y", head_start_pos.y, 0.15).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	)
 	await tween.finished
 
