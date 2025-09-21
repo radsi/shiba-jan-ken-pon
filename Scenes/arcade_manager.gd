@@ -1,4 +1,4 @@
-extends Node2D
+extends CanvasLayer
 
 @onready var labels_group = $GameLabels
 @onready var hands_group = $Hands
@@ -316,6 +316,7 @@ func _animate_head() -> void:
 		rot_tween.tween_property(head_root, "rotation_degrees", head_root.rotation_degrees + 360, 0.5)
 		
 		if is_boss_round == false: return
+		$Heads/Head/AudioStreamPlayer2D.play()
 		var bounce_tween = create_tween()
 		for i in range(6):
 			bounce_tween.tween_property(head_root, "position:y", head_start_pos.y - 50, 0.15).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
