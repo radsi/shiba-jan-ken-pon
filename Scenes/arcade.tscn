@@ -1,10 +1,12 @@
-[gd_scene load_steps=7 format=3 uid="uid://s7cxpq17py1p"]
+[gd_scene load_steps=9 format=3 uid="uid://s7cxpq17py1p"]
 
 [ext_resource type="Texture2D" uid="uid://bwhj2gn0lyeha" path="res://Enemies/shiba.png" id="1_nuqfx"]
 [ext_resource type="Script" uid="uid://7ps3ls8xbehj" path="res://Scenes/arcade_manager.gd" id="1_nw1ri"]
+[ext_resource type="Texture2D" uid="uid://d1kaqxkppd6ll" path="res://player hands.png" id="2_8inwh"]
 [ext_resource type="Texture2D" uid="uid://cmigkftc32ip6" path="res://Keyboard Letters and Symbols.png" id="2_nw1ri"]
 [ext_resource type="Texture2D" uid="uid://muf7cerhato" path="res://default-hands.png" id="3_8inwh"]
 [ext_resource type="FontFile" uid="uid://dpr4kf3pm2u4p" path="res://PressStart2P-vaV7.ttf" id="4_0ov7s"]
+[ext_resource type="Script" uid="uid://c3knbmcenfh2a" path="res://Scenes/combo_labels.gd" id="5_0ov7s"]
 [ext_resource type="Script" uid="uid://dqb3fsrcjljrq" path="res://Scenes/status_labels.gd" id="5_nw1ri"]
 
 [node name="Arcade" type="Node2D"]
@@ -19,31 +21,119 @@ size_flags_horizontal = 4
 color = Color(0.36290386, 0.40453744, 0.42925543, 1)
 metadata/_edit_use_anchors_ = true
 
-[node name="key 1" type="Sprite2D" parent="."]
+[node name="Inputs" type="CanvasGroup" parent="."]
+position = Vector2(652, 66)
+
+[node name="Rock" type="Sprite2D" parent="Inputs"]
 texture_filter = 1
-position = Vector2(495, 541)
+position = Vector2(-167, 542)
+scale = Vector2(0.59785783, 0.5770465)
+texture = ExtResource("2_8inwh")
+hframes = 2
+vframes = 2
+
+[node name="key 1" type="Sprite2D" parent="Inputs"]
+texture_filter = 1
+position = Vector2(-157, 475)
 scale = Vector2(4.9999995, 5)
 texture = ExtResource("2_nw1ri")
 hframes = 8
 vframes = 14
 frame = 2
 
-[node name="key 2" type="Sprite2D" parent="."]
+[node name="key 2" type="Sprite2D" parent="Inputs"]
 texture_filter = 1
-position = Vector2(585, 541)
+position = Vector2(-67, 475)
 scale = Vector2(4.9999995, 5)
 texture = ExtResource("2_nw1ri")
 hframes = 9
 vframes = 14
 
-[node name="key 3" type="Sprite2D" parent="."]
+[node name="key 3" type="Sprite2D" parent="Inputs"]
 texture_filter = 1
-position = Vector2(685, 541)
+position = Vector2(33, 475)
 scale = Vector2(4.9999995, 5)
 texture = ExtResource("2_nw1ri")
 hframes = 8
 vframes = 14
 frame = 3
+
+[node name="Scissors" type="Sprite2D" parent="Inputs"]
+texture_filter = 1
+position = Vector2(32, 578)
+scale = Vector2(0.59785783, 0.5770465)
+texture = ExtResource("2_8inwh")
+hframes = 2
+vframes = 2
+frame = 2
+
+[node name="Paper" type="Sprite2D" parent="Inputs"]
+texture_filter = 1
+position = Vector2(-52, 582)
+scale = Vector2(0.59785783, 0.5770465)
+texture = ExtResource("2_8inwh")
+hframes = 2
+vframes = 2
+frame = 3
+
+[node name="ComboLabels" type="CanvasGroup" parent="."]
+position = Vector2(652, 66)
+
+[node name="GameText2" type="Label" parent="ComboLabels"]
+offset_left = -7.0
+offset_top = 12.0
+offset_right = 774.0
+offset_bottom = 245.0
+theme_override_fonts/font = ExtResource("4_0ov7s")
+theme_override_font_sizes/font_size = 32
+text = "X1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GameText" type="Label" parent="ComboLabels"]
+offset_left = -7.0
+offset_top = 12.0
+offset_right = 774.0
+offset_bottom = 245.0
+theme_override_fonts/font = ExtResource("4_0ov7s")
+theme_override_font_sizes/font_size = 32
+text = "X1"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("5_0ov7s")
+
+[node name="GameText3" type="Label" parent="ComboLabels"]
+offset_left = -7.0
+offset_top = 12.0
+offset_right = 774.0
+offset_bottom = 245.0
+theme_override_fonts/font = ExtResource("4_0ov7s")
+theme_override_font_sizes/font_size = 32
+text = "X1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GameText4" type="Label" parent="ComboLabels"]
+offset_left = -7.0
+offset_top = 12.0
+offset_right = 774.0
+offset_bottom = 245.0
+theme_override_fonts/font = ExtResource("4_0ov7s")
+theme_override_font_sizes/font_size = 32
+text = "X1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GameText5" type="Label" parent="ComboLabels"]
+offset_left = -7.0
+offset_top = 12.0
+offset_right = 774.0
+offset_bottom = 245.0
+theme_override_fonts/font = ExtResource("4_0ov7s")
+theme_override_font_sizes/font_size = 32
+text = "X1"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="RoundLabels" type="CanvasGroup" parent="."]
 position = Vector2(-336, -66)

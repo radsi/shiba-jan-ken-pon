@@ -18,12 +18,14 @@ var sequence = [["Jan", 1.0], ["Ken", 1.0], ["Pon", 1.0]]
 var sequence_index = 0
 
 var player_move: int = -1
+var player_combo: int = 0
 var result_shown = false
 var result_timer: float = 0.0
 var cpu_move: int = -1
 var original_hand_frame: int
 var original_hand_flip_h: bool
 var game_over = false
+var game_round: int = 1
 
 var head_start_pos: Vector2
 var head_start_rot: float
@@ -104,8 +106,125 @@ func _process(delta):
 		for lbl in clones:
 			lbl.visible = false
 
+		# Movimiento CPU
 		cpu_move = randi() % 3
 		var second_hand = hands_group.get_child(1)
 		if second_hand is Sprite2D:
 			match cpu_move:
-				0: second_hand.frame = 13;
+				0:
+					second_hand.frame = 13
+					second_hand.flip_h = false
+				1:
+					second_hand.frame = 0
+					second_hand.flip_h = false
+				2:
+					second_hand.frame = 11
+					second_hand.flip_h = true
+
+		# Resultado
+		var result_text = "I win"
+		CPUPoints += 1
+		speedup_step = 0.1
+		if player_move != -1:
+			if player_move == cpu_move:
+				result_text = "Draw"
+				speedup_step = 0.05
+				CPUPoints -= 1
+			elif (player_move == 0 and cpu_move == 2) or \
+				 (player_move == 1 and cpu_move == 0) or \
+				 (player_move == 2 and cpu_move == 1):
+				result_text = "You win"
+				speedup_step = -0.05
+				player_combo += 1
+				PlayerPoints += 1
+				CPUPoints -= 1
+				
+		if result_text == "I win":
+			player_combo = 0
+			for lbl in $ComboLabels.get_children():
+				lbl.visible = false
+
+		for lbl in clones:
+			lbl.text = result_text
+
+		result_shown = true
+		result_timer = 0.0
+
+		for lbl in $PointsLabels.get_children():
+			lbl.text = str(PlayerPoints) + " - " + str(CPUPoints)
+		
+		if player_combo >= 2:
+			for lbl in $ComboLabels.get_children():
+				lbl.visible = true
+				lbl.text = "x"+str(player_combo)
+
+	if result_shown:
+		result_timer += delta
+		if result_timer >= result_display_time:
+			if abs(PlayerPoints - CPUPoints) >= 4:
+				_game_over()
+			else:
+				_reset_loop()
+
+func _reset_loop():
+	time_accum = 0.0
+	intro_ended = false
+	sequence_index = 0
+	player_move = -1
+	result_shown = false
+	result_timer = 0.0
+	cpu_move = -1
+
+	for i in range(sequence.size()):
+		sequence[i][1] = max(0.1, sequence[i][1] - speedup_step)
+
+	for i in range(clones.size()):
+		clones[i].visible = true
+		clones[i].text = clones[0].text
+		clones[i].rotation_degrees = 0
+
+	var second_hand = hands_group.get_child(1)
+	if second_hand is Sprite2D:
+		second_hand.frame = original_hand_frame
+		second_hand.flip_h = original_hand_flip_h
+
+func _game_over():
+	game_over = true
+	var winner_text = ""
+	if PlayerPoints > CPUPoints:
+		winner_text = "Player Wins!"
+		game_round += 1
+	else:
+		winner_text = "CPU Wins!"
+
+	for lbl in clones:
+		lbl.visible = true
+		lbl.text = winner_text
+		
+	for lbl in $RoundLabels.get_children():
+		lbl.text = game_round
+
+	_animate_head()
+
+func _animate_head():
+	var tween = create_tween()
+
+	var screen_bottom = DisplayServer.window_get_size().y + 100
+	tween.tween_property(head_sprite, "position:y", screen_bottom, 0.5)
+	tween.tween_property(head_sprite, "rotation_degrees", 360, 0.5)
+	tween.tween_callback(Callable(self, "_change_head_texture"))
+
+	head_sprite.position = head_start_pos - Vector2(0, 200)
+	head_sprite.rotation_degrees = 0
+
+	tween.tween_property(head_sprite, "position", head_start_pos, 0.5)
+	tween.tween_property(head_sprite, "rotation_degrees", head_start_rot, 0.5)
+
+	await tween.finished
+	await get_tree().create_timer(1.0).timeout
+	game_over = false
+	_reset_loop()
+
+func _change_head_texture():
+	if enemy_textures.size() > 0:
+		head_sprite.texture = enemy_textures[randi() % enemy_textures.size()]

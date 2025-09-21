@@ -19,7 +19,6 @@ func _process(delta):
 			var color_index = int(float(i) / float(num_labels - 1) * float(colors.size() - 1))
 			lbl.modulate = colors[color_index]
 
-# Función para cambiar el texto de todos los labels
 func set_all_text(new_text: String) -> void:
 	var labels_group = $".."
 	for i in range(labels_group.get_child_count()):
