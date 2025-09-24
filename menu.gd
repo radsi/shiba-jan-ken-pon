@@ -7,7 +7,7 @@ func _ready() -> void:
 	if $Title/AnimationPlayer != null:
 		$Title/AnimationPlayer.seek(0, true)
 		$Title/AnimationPlayer.play("mainmenu")
-	if first_time == false:
+	if first_time == false and $ColorRect2 != null:
 		$ColorRect2.color.a = 1
 		var tween = create_tween()
 		tween.tween_property($ColorRect2, "color:a", 0, 1)

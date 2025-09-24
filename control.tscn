@@ -8,6 +8,45 @@
 [ext_resource type="Texture2D" uid="uid://bwghq0evodm1g" path="res://Enemies/shiba green.png" id="6_6a6wx"]
 [ext_resource type="Texture2D" uid="uid://bwhj2gn0lyeha" path="res://Enemies/shiba.png" id="7_sky72"]
 
+[sub_resource type="Animation" id="Animation_6a6wx"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Shiba:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(441, 180.99998)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("ShibaGreen:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(709.00006, 181.99998)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Oni:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(575, 181.99998)]
+}
+
 [sub_resource type="Animation" id="Animation_iy58a"]
 resource_name = "mainmenu"
 length = 6.0
@@ -63,45 +102,6 @@ tracks/3/keys = {
 }]
 }
 
-[sub_resource type="Animation" id="Animation_6a6wx"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Shiba:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(441, 180.99998)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("ShibaGreen:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(709.00006, 181.99998)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Oni:position")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(575, 181.99998)]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_sky72"]
 _data = {
 &"RESET": SubResource("Animation_6a6wx"),
@@ -119,6 +119,7 @@ script = ExtResource("1_62e2m")
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("2_ee4bf")
+volume_db = 24.0
 
 [node name="ColorRect2" type="ColorRect" parent="."]
 z_index = 3

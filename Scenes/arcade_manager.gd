@@ -51,6 +51,7 @@ func _ready():
 	_save_original_hand()
 	_load_enemy_textures("res://Enemies/")
 	_change_head_texture()
+	game_round = 1
 
 func _init_labels():
 	clones = labels_group.get_children().filter(func(c): return c is Label)
@@ -137,7 +138,7 @@ func _handle_sequence(delta):
 		if sequence_index == 1 and cpu_move == -1:
 			cpu_move = randi() % 3
 			if game_round == 1:
-				$AudioStreamPlayer2D3.play()
+				$"exclamation sfx".play()
 				$ExclMark.visible = true
 		if sequence_index > 0 and game_round == 1:
 			var first_hand := hands_group.get_child(0) as Sprite2D
@@ -212,13 +213,13 @@ func _determine_winner() -> String:
 			 (player_move == 1 and cpu_move == 0) or \
 			 (player_move == 2 and cpu_move == 1):
 			result_text = "You win"
-			$Heads/Head/AudioStreamPlayer2D4.play()
+			$"Heads/Head/win sfx".play()
 			player_combo += 1
 			if player_combo >= 2: speedup_step = -0.05
 			PlayerPoints += 1
 			CPUPoints -= 1
 	if result_text == "I win":
-		$Heads/Head/AudioStreamPlayer2D2.play()
+		$"Heads/Head/wrong sfx".play()
 		player_combo = 0
 		speedup_step = 0.1
 	return result_text
@@ -248,23 +249,23 @@ func _reset_loop():
 			hand.flip_h = original_hand_flip_h
 		else:
 			hand.flip_h = not original_hand_flip_h
-		
+	
+	is_boss_round = game_round % 3 == 0
+	
 	if is_boss_round and abs(PlayerPoints - CPUPoints) < point_diff_towin:
 		_animate_hand()
-
-	is_boss_round = game_round % 3 == 0
 
 func _game_over():
 	var winner_text = ""
 	_animate_keys()
 	if PlayerPoints > CPUPoints:
-		winner_text = "Player Wins!"
-		$Heads/Head/AudioStreamPlayer2D3.play()
+		winner_text = "Defeated!"
+		$"Heads/Head/dead sfx".play()
 		_animate_head()
 		game_round += 1
 	else:
 		game_over = true
-		winner_text = "CPU Wins!"
+		winner_text = "Too bad!"
 		hands_group.get_child(0).frame = original_hand_frame
 		hands_group.get_child(0).flip_h = true
 		hands_group.get_child(1).flip_h = false
@@ -287,7 +288,7 @@ func _game_over():
 			f.store_32(game_round)
 			f.close()
 
-		$AudioStreamPlayer2D2.play()
+		$"lose sfx".play()
 		var tween = create_tween()
 		tween.tween_property($ColorRect2, "color:a", 1, 3)
 		tween.tween_callback(Callable(self, "_change_scene_menu"))
@@ -333,7 +334,7 @@ func _animate_hand() -> void:
 	tween.tween_callback(func():
 		$Inputs.get_child(invalid_player_move).visible = false
 		$Particles.get_child(invalid_player_move).emitting = true
-		$Inputs/AudioStreamPlayer2D.play()
+		$"Inputs/break sfx".play()
 	)
 	tween.tween_property(hand, "position", hand_start_pos, 0.3).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 	tween.tween_callback(func():
@@ -357,7 +358,7 @@ func _animate_head() -> void:
 		rot_tween.tween_property(head_root, "rotation_degrees", head_root.rotation_degrees + 360, 0.5)
 		
 		if is_boss_round == false: return
-		$Heads/Head/AudioStreamPlayer2D.play()
+		$"Heads/Head/boss sfx".play()
 		var bounce_tween = create_tween()
 		for i in range(6):
 			bounce_tween.tween_property(head_root, "position:y", head_start_pos.y - 50, 0.15).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
