@@ -109,7 +109,20 @@ func _check_player_input():
 	elif Input.is_action_just_pressed("ui_up"): player_move = 1
 	elif Input.is_action_just_pressed("ui_right"): player_move = 2
 	
-	if player_move == invalid_player_move: player_move = -1
+	for ch in $Inputs.get_children():
+		ch.modulate = Color(1,1,1,1)
+	
+	if player_move == invalid_player_move:
+		player_move = -1
+		return
+	
+	var candidates = []
+	for ch in $Inputs.get_children():
+		if ch.name in ["Rock", "Paper", "Scissors"]:
+			candidates.append(ch)
+
+	if player_move >= 0 and player_move < candidates.size():
+		candidates[player_move].modulate = Color(1, 1, 0.5, 1)
 
 func _handle_intro():
 	if not intro_ended and time_accum >= (display_time):
@@ -186,6 +199,7 @@ func _update_cpu_hand():
 		2: second_hand.frame = 11; second_hand.flip_h = true
 
 func _determine_winner() -> String:
+	if is_boss_round: _animate_keys()
 	var result_text := "I win"
 	CPUPoints += 1
 	speedup_step = 0
@@ -198,11 +212,13 @@ func _determine_winner() -> String:
 			 (player_move == 1 and cpu_move == 0) or \
 			 (player_move == 2 and cpu_move == 1):
 			result_text = "You win"
+			$Heads/Head/AudioStreamPlayer2D4.play()
 			player_combo += 1
 			if player_combo >= 2: speedup_step = -0.05
 			PlayerPoints += 1
 			CPUPoints -= 1
 	if result_text == "I win":
+		$Heads/Head/AudioStreamPlayer2D2.play()
 		player_combo = 0
 		speedup_step = 0.1
 	return result_text
@@ -215,7 +231,6 @@ func _reset_loop():
 	time_accum = 0.0
 	intro_ended = false
 	sequence_index = 0
-	_animate_keys()
 	invalid_player_move = player_move
 	if not is_boss_round: invalid_player_move = -1
 	player_move = -1
@@ -241,10 +256,11 @@ func _reset_loop():
 
 func _game_over():
 	var winner_text = ""
+	_animate_keys()
 	if PlayerPoints > CPUPoints:
 		winner_text = "Player Wins!"
+		$Heads/Head/AudioStreamPlayer2D3.play()
 		_animate_head()
-		_animate_keys()
 		game_round += 1
 	else:
 		game_over = true
@@ -296,9 +312,6 @@ func _change_scene_menu():
 	get_tree().change_scene_to_file("res://control.tscn")
 
 func _animate_keys() -> void:
-	if not is_boss_round:
-		return
-	
 	for key in $Inputs.get_children():
 		if not key.visible:
 			var start_pos = key.position
@@ -312,8 +325,7 @@ func _animate_hand() -> void:
 	if invalid_player_move == -1: return
 	var hand = hands_group.get_child(0) as Node2D
 	var key_top = $Inputs.get_child(invalid_player_move).global_position - Vector2(0, 40)
-	var hand_start_pos = hand.position
-
+	hand_start_pos = hand.position
 	hand.frame = 13
 
 	var tween = create_tween()

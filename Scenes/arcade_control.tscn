@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://b2t413udw1006"]
+[gd_scene load_steps=25 format=3 uid="uid://b2t413udw1006"]
 
 [ext_resource type="Texture2D" uid="uid://cmigkftc32ip6" path="res://Keyboard Letters and Symbols.png" id="1_du3si"]
 [ext_resource type="Script" uid="uid://7ps3ls8xbehj" path="res://Scenes/arcade_manager.gd" id="1_wf7sn"]
@@ -12,9 +12,12 @@
 [ext_resource type="Texture2D" uid="uid://bwhj2gn0lyeha" path="res://Enemies/shiba.png" id="9_gu6ug"]
 [ext_resource type="AudioStream" uid="uid://c4n65ld53k2jt" path="res://190843__deathbygeko__boss-fight.wav" id="10_ytw5g"]
 [ext_resource type="Texture2D" uid="uid://dht1btvf6yflx" path="res://smoke_spritesheet.png" id="11_2rxej"]
+[ext_resource type="AudioStream" uid="uid://pu5148tvf71w" path="res://750933__etheraudio__incorrect-buzzer-retro.wav" id="12_ejbjt"]
 [ext_resource type="AudioStream" uid="uid://djh85noe0r814" path="res://90143__pengo_au__steam_burst.wav" id="12_umkwy"]
 [ext_resource type="AudioStream" uid="uid://bivlftrvbxgj2" path="res://639262__szegvari__retro-party-dance-80s-70s-funk-talkbox-synth-organ-drum-music-cinematic.wav" id="13_7mbo3"]
+[ext_resource type="AudioStream" uid="uid://8j4n0lsoyouc" path="res://371451__cabled_mess__lose_funny_retro_video-game.wav" id="13_byp25"]
 [ext_resource type="AudioStream" uid="uid://cjset4jvisv7j" path="res://721593__moodyfingers__not-oc-ding-a5-note.wav" id="14_7fgh6"]
+[ext_resource type="AudioStream" uid="uid://fgs5ntn1ff53" path="res://514160__edwardszakal__score-beep.mp3" id="14_byp25"]
 [ext_resource type="AudioStream" uid="uid://bys7p0xd11ijv" path="res://350981__cabled_mess__lose_c_09.wav" id="15_7v2an"]
 [ext_resource type="Texture2D" uid="uid://fxy78i70wp60" path="res://excl_mark.png" id="17_kkxhr"]
 
@@ -514,6 +517,18 @@ texture = ExtResource("9_gu6ug")
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="Heads/Head"]
 stream = ExtResource("10_ytw5g")
 volume_db = -6.0
+
+[node name="AudioStreamPlayer2D2" type="AudioStreamPlayer2D" parent="Heads/Head"]
+stream = ExtResource("12_ejbjt")
+volume_db = -15.0
+
+[node name="AudioStreamPlayer2D3" type="AudioStreamPlayer2D" parent="Heads/Head"]
+stream = ExtResource("13_byp25")
+volume_db = -5.0
+
+[node name="AudioStreamPlayer2D4" type="AudioStreamPlayer2D" parent="Heads/Head"]
+stream = ExtResource("14_byp25")
+volume_db = -12.0
 
 [node name="Smokes" type="CanvasGroup" parent="."]
 

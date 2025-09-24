@@ -38,9 +38,9 @@ metadata/_edit_use_anchors_ = true
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.036458332
-anchor_top = 0.2839506
+anchor_top = 0.2700617
 anchor_right = 0.9670139
-anchor_bottom = 0.4845679
+anchor_bottom = 0.61728394
 offset_top = 1.5258789e-05
 grow_horizontal = 2
 grow_vertical = 2
@@ -51,6 +51,9 @@ Key sprites: dreammixgames on Itch.io
 Fox head: heilsena
 Oni head: fikriubai
 Ding sfx: moodyfingers on freesound.org
+Score Beep: edwardszakal on freesound.org
+Incorrect buzzer: EtherAudio on freesound.org
+Coin insert: AceOfSpadesProduc100 on freesound.org
 
 
 
